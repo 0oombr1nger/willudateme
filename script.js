@@ -1962,4 +1962,56 @@ document.addEventListener('DOMContentLoaded', function() {
             }, duration * 1000 + 1000);
         }, 300);
     }
+    function saveUserData() {
+        let selectedLocation = document.querySelector(".location-btn.selected")?.dataset.location || "None";
+        let selectedDate = document.querySelector(".date-picker")?.value || "None";
+        let selectedTime = document.querySelector(".time-picker")?.value || "None";
+    
+        let userData = {
+            location: selectedLocation,
+            date: selectedDate,
+            time: selectedTime
+        };
+    
+        // Lưu dữ liệu vào localStorage
+        localStorage.setItem("userData", JSON.stringify(userData));
+    
+        console.log("Dữ liệu đã lưu:", userData);
+    }
+    document.getElementById("confirm-location-btn").addEventListener("click", saveUserData);
+    document.getElementById("confirm-datetime").addEventListener("click", saveUserData);
+    document.addEventListener("DOMContentLoaded", function () {
+        let savedData = JSON.parse(localStorage.getItem("userData"));
+    
+        if (savedData) {
+            console.log("Dữ liệu đã tải:", savedData);
+    
+            if (savedData.location) {
+                let selectedBtn = document.querySelector(`.location-btn[data-location="${savedData.location}"]`);
+                if (selectedBtn) {
+                    selectedBtn.classList.add("selected");
+                }
+            }
+    
+            if (savedData.date) {
+                let dateInput = document.querySelector(".date-picker");
+                if (dateInput) {
+                    dateInput.value = savedData.date;
+                }
+            }
+    
+            if (savedData.time) {
+                let timeInput = document.querySelector(".time-picker");
+                if (timeInput) {
+                    timeInput.value = savedData.time;
+                }
+            }
+        }
+    });
+    document.getElementById("clear-data-btn").addEventListener("click", function () {
+        localStorage.removeItem("userData");
+        alert("Dữ liệu đã được xóa!");
+        location.reload(); // Tải lại trang để làm mới
+    });
+    
 });
