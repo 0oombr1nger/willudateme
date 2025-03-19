@@ -1963,21 +1963,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
     function saveUserData() {
-        let selectedLocation = document.querySelector(".location-btn.selected")?.dataset.location || "None";
-        let selectedDate = document.querySelector(".date-picker")?.value || "None";
-        let selectedTime = document.querySelector(".time-picker")?.value || "None";
+        let dateInput = document.querySelector(".date-picker");
+        let timeInput = document.querySelector(".time-picker");
     
+        let selectedDate = dateInput ? new Date(dateInput.value).toISOString().split("T")[0] : "None"; 
+        let selectedTime = timeInput ? timeInput.value : "None";
+    
+        // Lấy danh sách món ăn được chọn
+        let selectedFoods = Array.from(document.querySelectorAll(".food-btn.selected")).map(btn => btn.dataset.food);
+        
         let userData = {
             location: selectedLocation,
-            date: selectedDate,
-            time: selectedTime
+            date: selectedDate, // Format YYYY-MM-DD
+            time: selectedTime,
+            food: selectedFoods.length > 0 ? selectedFoods : ["None"]
         };
     
-        // Lưu dữ liệu vào localStorage
         localStorage.setItem("userData", JSON.stringify(userData));
-    
         console.log("Dữ liệu đã lưu:", userData);
     }
+    
     document.getElementById("confirm-location-btn").addEventListener("click", saveUserData);
     document.getElementById("confirm-datetime").addEventListener("click", saveUserData);
     document.addEventListener("DOMContentLoaded", function () {
@@ -2006,8 +2011,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     timeInput.value = savedData.time;
                 }
             }
+    
+            // Hiển thị lại món ăn đã chọn
+            if (savedData.food) {
+                savedData.food.forEach(food => {
+                    let foodBtn = document.querySelector(`.food-btn[data-food="${food}"]`);
+                    if (foodBtn) {
+                        foodBtn.classList.add("selected");
+                    }
+                });
+            }
         }
     });
+    
     document.getElementById("clear-data-btn").addEventListener("click", function () {
         localStorage.removeItem("userData");
         alert("Dữ liệu đã được xóa!");
