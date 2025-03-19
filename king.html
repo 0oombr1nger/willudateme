@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Data</title>
+</head>
+<body>
+    <h1>Your Saved Data</h1>
+    <p id="data-display">Loading...</p>
+    <button id="download-btn">Download Data</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let savedData = localStorage.getItem("userData");
+
+            if (savedData) {
+                document.getElementById("data-display").innerText = "Dữ liệu của bạn đã sẵn sàng!";
+                document.getElementById("download-btn").addEventListener("click", function () {
+                    let blob = new Blob([savedData], { type: "application/json" });
+                    let a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "user_data.json";
+                    a.click();
+                });
+            } else {
+                document.getElementById("data-display").innerText = "Không có dữ liệu nào được lưu!";
+                document.getElementById("download-btn").style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
